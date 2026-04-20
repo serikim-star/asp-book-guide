@@ -124,12 +124,15 @@
   }
   .meta {
     display: flex;
-    gap: 24px;
+    gap: 20px;
+    align-items: center;
     font-size: 12px;
     color: var(--ink-40);
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    flex-wrap: wrap;
   }
+  .meta > span { white-space: nowrap; }
   .meta span b { color: var(--ink); font-weight: 500; }
 
   /* ============ HERO ============ */
@@ -816,6 +819,7 @@
   .modal-head-text {
     flex: 1;
     min-width: 0;
+    padding-right: 140px;
   }
   @media (max-width: 640px) {
     .modal-head {
@@ -826,12 +830,11 @@
       width: 110px;
       flex: 0 0 auto;
     }
+    .modal-head-text { padding-right: 0; padding-top: 44px; }
+    .modal-head-actions { top: 14px; right: 14px; }
   }
 
   .modal-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     width: 36px; height: 36px;
     border-radius: 50%;
     border: 1px solid var(--line);
@@ -842,6 +845,7 @@
     font-size: 18px;
     color: var(--ink-60);
     transition: all 0.2s ease;
+    flex-shrink: 0;
   }
   .modal-close:hover {
     background: var(--ink);
@@ -1088,6 +1092,191 @@
     line-height: 1.5;
   }
 
+  /* ============ PRINT BUTTONS ============ */
+  .print-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-family: var(--f-body);
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+    border: 1px solid transparent;
+    line-height: 1;
+  }
+  .print-btn svg { flex-shrink: 0; opacity: 0.85; }
+  .print-btn--primary {
+    background: var(--mint-deep);
+    color: var(--white);
+    border-color: var(--mint-deep);
+  }
+  .print-btn--primary:hover {
+    background: color-mix(in srgb, var(--mint-deep) 85%, #000);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -6px rgba(15,158,140,0.45);
+  }
+  .print-btn--secondary {
+    background: var(--white);
+    color: var(--mint-deep);
+    border-color: color-mix(in srgb, var(--mint-deep) 30%, var(--line));
+  }
+  .print-btn--secondary:hover {
+    background: var(--mint-wash);
+    border-color: var(--mint-deep);
+  }
+  .print-btn--ghost {
+    background: transparent;
+    color: var(--ink-60);
+    border-color: var(--line);
+    padding: 7px 11px;
+    font-size: 11.5px;
+  }
+  .print-btn--ghost:hover {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--ink-40);
+  }
+
+  .books-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .modal-head-actions {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  /* ============ PRINT MEDIA ============ */
+  @media print {
+    /* Base: simplify, remove shadows, ensure colors render */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      box-shadow: none !important;
+    }
+    body {
+      background: white !important;
+    }
+    /* Hide interactive/navigational chrome by default */
+    .print-btn,
+    .age-nav,
+    .books-hint,
+    .hero-ornament,
+    .masthead .meta,
+    .asp-filter-section {
+      display: none !important;
+    }
+    /* Flatten sticky/position */
+    .age-nav,
+    .modal-backdrop,
+    .modal {
+      position: static !important;
+    }
+    /* Masthead compact */
+    .masthead {
+      padding: 16px 24px !important;
+      border-bottom: 2px solid var(--ink) !important;
+    }
+    .hero {
+      padding: 24px 24px 16px !important;
+    }
+    .hero h1 { font-size: 32px !important; }
+    .hero-sub { font-size: 12px !important; max-width: none !important; }
+
+    /* ASP detail */
+    .asp-detail { padding: 16px 24px !important; }
+    .asp-detail-card {
+      padding: 20px !important;
+      page-break-inside: avoid;
+    }
+    .asp-detail-code { font-size: 40px !important; }
+    .asp-detail-body h3 { font-size: 18px !important; }
+
+    /* Books grid: 3 columns on print */
+    .books-section { padding: 16px 24px 24px !important; }
+    .books-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 12px !important;
+    }
+    .book-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      animation: none !important;
+      border: 1px solid var(--line) !important;
+    }
+    .book-card:hover { transform: none !important; }
+    .book-cta { display: none !important; }
+    .book-title { font-size: 12px !important; }
+    .book-author { font-size: 10px !important; }
+
+    footer { padding: 16px 24px !important; }
+
+    /* ==== FILTER MODE (print current filter only) ==== */
+    body.print-filter .hero,
+    body.print-filter .age-nav,
+    body.print-filter .asp-filter-section {
+      display: none !important;
+    }
+    body.print-filter .asp-detail {
+      padding-top: 8px !important;
+    }
+
+    /* ==== BOOK MODE (print single book modal) ==== */
+    body.print-book .masthead,
+    body.print-book .hero,
+    body.print-book .age-nav,
+    body.print-book .asp-filter-section,
+    body.print-book .asp-detail,
+    body.print-book .books-section,
+    body.print-book footer {
+      display: none !important;
+    }
+    body.print-book .modal-backdrop {
+      display: flex !important;
+      position: static !important;
+      background: transparent !important;
+      padding: 0 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    body.print-book .modal {
+      max-width: none !important;
+      width: 100% !important;
+      max-height: none !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      transform: none !important;
+      overflow: visible !important;
+    }
+    body.print-book .modal-head-actions,
+    body.print-book .modal-close {
+      display: none !important;
+    }
+    body.print-book .modal-head,
+    body.print-book .modal-body {
+      page-break-inside: avoid;
+    }
+
+    /* Page setup */
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+  }
+
   /* ============ ANIMATIONS ============ */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(12px); }
@@ -1199,6 +1388,10 @@
       <span><b>2026</b> · 1학기</span>
       <span><b>8</b> ASP 유형</span>
       <span><b>144</b> 추천 도서</span>
+      <button class="print-btn print-btn--primary" onclick="printReport('all')" aria-label="전체 PDF로 저장">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>전체 PDF 저장</span>
+      </button>
     </div>
   </div>
 </header>
@@ -1259,7 +1452,13 @@
   <div class="books-inner">
     <div class="books-header">
       <h2 class="books-title" id="booksTitle">추천 도서<span class="count" id="booksCount"></span></h2>
-      <div class="books-hint">카드를 클릭하면 상세 설명을 볼 수 있습니다</div>
+      <div class="books-header-actions">
+        <div class="books-hint">카드를 클릭하면 상세 설명을 볼 수 있습니다</div>
+        <button class="print-btn print-btn--secondary" onclick="printReport('filter')" aria-label="현재 화면을 PDF로 저장">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>현재 화면 PDF 저장</span>
+        </button>
+      </div>
     </div>
     <div class="books-grid" id="booksGrid"></div>
   </div>
@@ -1837,7 +2036,13 @@ function openModal(book) {
   modal.style.setProperty("--mc", t.color);
   modal.innerHTML = `
     <div class="modal-head">
-      <button class="modal-close" aria-label="닫기">×</button>
+      <div class="modal-head-actions">
+        <button class="print-btn print-btn--ghost" onclick="printReport('book')" aria-label="이 책을 PDF로 저장">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>PDF 저장</span>
+        </button>
+        <button class="modal-close" aria-label="닫기">×</button>
+      </div>
       <div class="modal-cover-wrap">
         ${book.cover ? `<img class="modal-cover-img" src="${book.cover}" alt="${book.title} 표지" />` : `<div class="modal-cover-fallback">${book.title.charAt(0)}</div>`}
       </div>
@@ -1890,6 +2095,33 @@ function openModal(book) {
 function closeModal() {
   document.getElementById("modalBackdrop").classList.remove("open");
   document.body.style.overflow = "";
+}
+
+// ============ PRINT ============
+function printReport(mode) {
+  // mode: 'all' | 'filter' | 'book'
+  const body = document.body;
+  // Clear any previous mode classes
+  body.classList.remove("print-filter", "print-book");
+
+  if (mode === "filter") {
+    body.classList.add("print-filter");
+  } else if (mode === "book") {
+    body.classList.add("print-book");
+  }
+
+  // Use setTimeout to let CSS apply before print dialog opens
+  setTimeout(() => {
+    window.print();
+    // Clean up after print (works on most browsers)
+    const cleanup = () => {
+      body.classList.remove("print-filter", "print-book");
+      window.removeEventListener("afterprint", cleanup);
+    };
+    window.addEventListener("afterprint", cleanup);
+    // Fallback cleanup in case afterprint doesn't fire
+    setTimeout(cleanup, 1000);
+  }, 50);
 }
 
 // ============ EVENT LISTENERS ============
