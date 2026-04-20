@@ -1376,46 +1376,77 @@
     body.print-book footer {
       display: none !important;
     }
+
+    /* Backdrop: become a normal block, no grid centering, no padding */
     body.print-book .modal-backdrop {
       display: block !important;
       position: static !important;
+      inset: auto !important;
       background: transparent !important;
+      backdrop-filter: none !important;
       padding: 0 !important;
+      margin: 0 !important;
       opacity: 1 !important;
       visibility: visible !important;
       transform: none !important;
+      place-items: stretch !important;
+      z-index: auto !important;
+      pointer-events: auto !important;
     }
+
+    /* Modal: fill page width fully, remove all height/overflow limits */
     body.print-book .modal {
+      display: block !important;
       max-width: 100% !important;
       width: 100% !important;
       max-height: none !important;
+      height: auto !important;
       margin: 0 !important;
+      padding: 0 !important;
+      background: var(--white) !important;
       box-shadow: none !important;
       border: none !important;
       border-radius: 0 !important;
       transform: none !important;
       overflow: visible !important;
+      position: static !important;
     }
+
+    /* Hide close/action buttons */
     body.print-book .modal-head-actions,
-    body.print-book .modal-close {
+    body.print-book .modal-close,
+    body.print-book .print-btn {
       display: none !important;
     }
+
+    /* Modal head: full-width, no rounded corners, no page-break-avoid */
     body.print-book .modal-head {
-      padding: 20px 24px !important;
+      display: flex !important;
+      position: static !important;
+      padding: 0 0 16px !important;
+      margin: 0 0 16px !important;
       border-radius: 0 !important;
+      border-bottom: 1px solid var(--line) !important;
+      background: transparent !important;
       gap: 20px !important;
-      page-break-inside: avoid;
+      align-items: flex-start !important;
     }
     body.print-book .modal-head-text {
       padding-right: 0 !important;
+      padding-top: 0 !important;
     }
     body.print-book .modal-cover-wrap {
-      flex: 0 0 120px !important;
-      width: 120px !important;
+      flex: 0 0 110px !important;
+      width: 110px !important;
+      border-radius: 6px !important;
+    }
+    body.print-book .modal-badges {
+      margin-bottom: 10px !important;
     }
     body.print-book .modal-title {
-      font-size: 20px !important;
+      font-size: 22px !important;
       line-height: 1.25 !important;
+      margin-bottom: 6px !important;
     }
     body.print-book .modal-author {
       font-size: 11px !important;
@@ -1425,8 +1456,11 @@
       font-size: 10px !important;
       padding: 4px 10px !important;
     }
+
+    /* Modal body: no extra padding (page margins take over) */
     body.print-book .modal-body {
-      padding: 18px 24px !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
     body.print-book .modal-section {
       margin-bottom: 14px !important;
@@ -1440,14 +1474,20 @@
       font-size: 11px !important;
       line-height: 1.6 !important;
     }
+    body.print-book .modal-core-list {
+      gap: 8px !important;
+    }
     body.print-book .modal-core-item {
       font-size: 10.5px !important;
       padding: 10px 12px !important;
       line-height: 1.55 !important;
     }
+    body.print-book .modal-interaction-list {
+      gap: 8px !important;
+    }
     body.print-book .modal-interaction-item {
       padding: 10px 12px !important;
-      margin-bottom: 8px !important;
+      margin-bottom: 0 !important;
       page-break-inside: avoid;
     }
     body.print-book .modal-interaction-name {
