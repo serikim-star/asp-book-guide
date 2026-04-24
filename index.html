@@ -4,6 +4,53 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ASP 유형별 추천 도서 · StoryLine</title>
+
+<!-- ============ GOOGLE ANALYTICS 4 ============ -->
+<!--
+  SETUP (after creating a GA4 property at https://analytics.google.com):
+  1) Copy your Measurement ID (format: G-XXXXXXXXXX)
+  2) Replace the placeholder "G-XXXXXXXXXX" on the line below with your ID
+  3) Save and redeploy.
+
+  While the placeholder remains, the site is fully functional and
+  analytics calls are silently skipped — no errors, no loaded scripts.
+-->
+<script>
+  // --- Configure your GA4 Measurement ID here ---
+  window.GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+
+  // Standard gtag bootstrap (kept even when ID is not set so trackEvent is safe)
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+
+  // Only load the GA library once a real ID is configured
+  if (window.GA_MEASUREMENT_ID && window.GA_MEASUREMENT_ID !== "G-XXXXXXXXXX") {
+    var gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_MEASUREMENT_ID;
+    document.head.appendChild(gaScript);
+    gtag("js", new Date());
+    gtag("config", window.GA_MEASUREMENT_ID, {
+      page_title: document.title,
+      send_page_view: true
+    });
+  }
+
+  /**
+   * Single event-tracking entry point used throughout the app.
+   * Fires a GA4 event when the Measurement ID is configured; no-ops otherwise.
+   *
+   * @param {string} eventName - snake_case event name (e.g. "book_open")
+   * @param {object} [params]  - key/value parameters (strings/numbers)
+   */
+  window.trackEvent = function(eventName, params) {
+    if (!window.GA_MEASUREMENT_ID || window.GA_MEASUREMENT_ID === "G-XXXXXXXXXX") return;
+    try {
+      gtag("event", eventName, params || {});
+    } catch (e) { /* never let analytics break the UI */ }
+  };
+</script>
+<!-- ============ END ANALYTICS ============ -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
@@ -1715,7 +1762,7 @@ const aspTypes = {
     name: "활짝열린 탐험가형",
     desc: "적응 기간 동안 활동량, 상호작용, 놀이 탐색 전반에서 변화 폭이 크게 나타납니다. 새로운 환경에서 다양한 활동과 또래 관계를 적극적으로 시도하며 빠르게 환경을 탐색합니다. '얼마나 많이 시도하느냐'보다 '여러 경험 속에서도 자기 리듬을 유지할 수 있느냐'가 적응의 핵심입니다.",
     description: "활동량, 사회적 시도, 놀이 탐색 전반에서 변화 폭이 크게 나타나며, 적응 기간 동안 환경에 대한 반응이 여러 영역에서 동시에 조정되고 있는 양상을 보이는 것이 특징입니다.",
-    tags: ["관계기반", "꾸준한탐색", "신중한자기표현"],
+    tags: ["전반적 전환형", "개방성", "환경반응성"],
     childVoice: "나는 새로워도 괜찮아! 이것도 해보고, 저것도 하면서 알아가는 게 좋아!",
     color: "var(--asp-ASP)",
     onColor: "var(--on-ASP)",
@@ -1725,7 +1772,7 @@ const aspTypes = {
     name: "어울림을 좋아하는 탐험가형",
     desc: "활동량과 사람과의 상호작용에서 변화가 비교적 크게 나타나며 교실 활동과 또래 관계에 적극적으로 참여하는 모습을 보입니다. 반면 놀이 방식은 비교적 익숙한 흐름을 유지합니다.",
     description: "활동량과 사회적 시도에서 변화가 두드러지며, 놀이 방식은 비교적 안정적으로 유지되는 가운데 관계와 일과 적응이 함께 진행되는 모습을 보이는 것이 특징입니다.",
-    tags: ["정서적친화성", "관계중심성장", "따뜻한상호작용"],
+    tags: ["관계·활동 중심 전환형", "활동적반응", "안정된 놀이"],
     childVoice: "나는 친구랑 같이 움직이면서, 함께 해보는 게 좋아!",
     color: "var(--asp-ASp)",
     onColor: "var(--on-ASp)",
@@ -1735,7 +1782,7 @@ const aspTypes = {
     name: "놀이에 몰입한 탐험가형",
     desc: "활동량과 놀이 탐색에서 변화가 두드러지며 몸을 사용한 활동이나 놀이에 깊이 몰입합니다. 사회적 시도는 비교적 안정적인 편이며, 자신이 선택한 놀이 경험을 통해 환경을 이해하고 확장해 갑니다.",
     description: "활동량과 놀이 탐색에서 변화가 크게 나타나며, 사회적 시도는 비교적 안정적인 상태에서 개인 중심의 활동과 놀이에서 두드러진 변화가 나타나는 양상을 보이는 것이 특징입니다.",
-    tags: ["깊이있는탐구", "선택적참여", "독립적집중력"],
+    tags: ["활동·놀이 확장형", "놀이몰입", "개인중심확장"],
     childVoice: "나는 내가 고른 놀이에 푹 빠져서 해보는 게 좋아!",
     color: "var(--asp-AsP)",
     onColor: "var(--on-AsP)",
@@ -1745,7 +1792,7 @@ const aspTypes = {
     name: "에너지가 살아있는 탐색자형",
     desc: "활동량에서 변화가 비교적 크게 나타나며 교실에서 움직임이 늘어나거나 신체 활동에 적극적으로 참여합니다. 반면 또래와의 상호작용이나 놀이 방식은 비교적 익숙한 흐름을 유지합니다.",
     description: "활동량에서만 변화 폭이 크게 나타나며, 사회적 관계와 놀이 방식은 비교적 일관되게 유지되는 적응 패턴을 보이는 것이 특징입니다.",
-    tags: ["차분한", "섬세한반응", "안정기반"],
+    tags: ["활동 중심 조정형", "리듬조정", "안정적관계·놀이"],
     childVoice: "나는 활동을 하면서 하루에 익숙해지는 게 좋아!",
     color: "var(--asp-Asp)",
     onColor: "var(--on-Asp)",
@@ -1755,7 +1802,7 @@ const aspTypes = {
     name: "어울림을 즐기는 탐색가형",
     desc: "또래와의 상호작용과 놀이 탐색에서 변화가 비교적 크게 나타나며 사람과 함께하는 경험 속에서 놀이의 범위를 확장하는 모습을 보입니다. 활동량 자체는 비교적 안정적으로 유지됩니다.",
     description: "사회적 시도와 놀이 탐색에서 변화가 크게 나타나며, 활동량은 비교적 안정적인 상태에서 관계 방식과 놀이 탐색 모두에서 두드러진 변화가 나타나는 양상을 보이는 것이 특징입니다.",
-    tags: ["다방면탐색", "높은에너지", "빠른적응"],
+    tags: ["관계·놀이 전환형", "놀이확장", "안정된 활동리듬"],
     childVoice: "나는 같이 놀면서 조금씩 넓혀가는 게 좋아!",
     color: "var(--asp-aSP)",
     onColor: "var(--on-aSP)",
@@ -1765,7 +1812,7 @@ const aspTypes = {
     name: "관계를 추구하는 관찰자형",
     desc: "사람과의 상호작용에서 변화가 비교적 크게 나타나며 또래나 교사의 반응을 살피는 모습을 보입니다. 활동과 놀이 방식은 비교적 안정적으로 유지되며 관계 중심으로 환경을 이해하는 경향이 있습니다.",
     description: "사회적 시도에서만 변화 폭이 크게 나타나며, 활동과 놀이 리듬은 비교적 안정적으로 유지되는 적응 패턴을 보이는 것이 특징입니다.",
-    tags: ["풍부한표현", "관계중심", "적극적 참여"],
+    tags: ["관계 중심 조정형", "신중한접근", "안정된리듬"],
     childVoice: "나는 사람을 보면서 천천히 다가가는 게 좋아!",
     color: "var(--asp-aSp)",
     onColor: "var(--on-aSp)",
@@ -1775,7 +1822,7 @@ const aspTypes = {
     name: "놀이를 따라가는 탐색자형",
     desc: "놀이 탐색에서 변화가 비교적 크게 나타나며 자신이 흥미를 느끼는 놀이를 중심으로 환경을 이해해 갑니다. 활동량과 사회적 시도는 비교적 안정적으로 유지됩니다.",
     description: "놀이 탐색에서만 변화가 크게 나타나며, 활동량과 사회적 시도는 비교적 안정적인 상태에서 놀이 방식이나 탐색 양상을 중심으로 변화가 두드러지는 모습을 보이는 것이 특징입니다.",
-    tags: ["자기주도탐색", "창의적변형", "선택적상호작용"],
+    tags: ["놀이 중심 확장형", "선택적몰입", "안정된활동·관계"],
     childVoice: "나는 내가 재미있다고 느끼는 놀이를 따라가면서 익숙해지는 게 좋아!",
     color: "var(--asp-asP)",
     onColor: "var(--on-asP)",
@@ -1785,7 +1832,7 @@ const aspTypes = {
     name: "차분히 지켜보는 관찰자형",
     desc: "활동량, 사회적 시도, 놀이 탐색 전반에서 변화 폭이 크지 않으며 기존의 활동과 관계 리듬을 비교적 안정적으로 유지합니다. 새로운 환경에서도 먼저 주변을 살피며 자신의 방식으로 환경을 이해하는 모습을 보일 수 있습니다.",
     description: "세 지표 모두에서 변화 폭이 크지 않으며, 기존의 활동·관계·놀이 리듬을 유지하며 안정적으로 적응하고 있는 양상을 보이는 것이 특징입니다.",
-    tags: ["신체기반탐색", "높은에너지", "공간활용능력"],
+    tags: ["안정적 유지형", "관찰중심적응", "점진적익숙"],
     childVoice: "나는 먼저 지켜보면서 천천히 익숙해지는 게 좋아!",
     color: "var(--asp-asp)",
     onColor: "var(--on-asp)",
@@ -2140,6 +2187,16 @@ function renderAspChips() {
   container.querySelectorAll(".asp-chip").forEach(c => {
     c.addEventListener("click", () => {
       currentAsp = c.dataset.asp;
+      // --- analytics: ASP selection ---
+      if (currentAsp === "all") {
+        window.trackEvent && window.trackEvent("asp_reset", { age_group: currentAge });
+      } else {
+        window.trackEvent && window.trackEvent("asp_select", {
+          asp_code: currentAsp,
+          asp_name: (aspTypes[currentAsp] && aspTypes[currentAsp].name) || "",
+          age_group: currentAge
+        });
+      }
       renderAspChips();
       renderAspDetail();
       renderBooks();
@@ -2259,6 +2316,16 @@ function openModal(book) {
   const modal = document.getElementById("modal");
   const t = aspTypes[book.asp];
   modal.style.setProperty("--mc", t.color);
+  // --- analytics: book detail opened ---
+  window.trackEvent && window.trackEvent("book_open", {
+    book_title: book.title,
+    book_author: book.author,
+    asp_code: book.asp,
+    age_group: currentAge,
+    concept: book.concept || ""
+  });
+  // keep a reference for print tracking
+  window.__currentBook = book;
   modal.innerHTML = `
     <div class="modal-head">
       <div class="modal-head-actions">
@@ -2335,6 +2402,14 @@ function printReport(mode) {
     body.classList.add("print-book");
   }
 
+  // --- analytics: print/PDF save ---
+  const trackParams = { print_mode: mode, age_group: currentAge, asp_code: currentAsp };
+  if (mode === "book" && window.__currentBook) {
+    trackParams.book_title = window.__currentBook.title;
+    trackParams.asp_code = window.__currentBook.asp;
+  }
+  window.trackEvent && window.trackEvent("pdf_print", trackParams);
+
   // Use setTimeout to let CSS apply before print dialog opens
   setTimeout(() => {
     window.print();
@@ -2355,6 +2430,11 @@ document.querySelectorAll(".age-tab").forEach(tab => {
     document.querySelectorAll(".age-tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
     currentAge = tab.dataset.age;
+    // --- analytics: age group selection ---
+    window.trackEvent && window.trackEvent("age_select", {
+      age_group: currentAge,
+      asp_code: currentAsp
+    });
     renderBooks();
   });
 });
